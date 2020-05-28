@@ -25,29 +25,51 @@ R=R-1;
 
 %thetas = linspace(0, theta_max, T+1);
 thetas = linspace(-theta_max, theta_max, T+1); % Slice the theta axis.
+%thetas = -theta_max:Dtheta:theta_max;
 %rhos = linspace(0, rho_max, R+1);
 rhos = linspace(-rho_max, rho_max, R+1); % Slice the rho axis.
+%rhos = -rho_max:1:rho_max;
 
 H = zeros(R, T);
+L = zeros(n,3);
 
 for n1=1:N1
     for n2=1:N2
         if (img_binary(n1,n2)==1)
             
             for j=1:T
-                %t = (thetas(j) + thetas(j+1))/2;
-                t = thetas(j);
+                t = (thetas(j) + thetas(j+1))/2;
+                %t = thetas(j);
                 r = n1*cos(t) + n2*sin(t);
+                %{
+                for i=2:R+1
+                    if (rhos(i)>=r)
+                        H(i-1,j)=H(i-1,j)+1;
+                        break;
+                    end
+                end
+                %}
+                
+                
                 dists = rhos-r;
                 [d,i]=min(abs(dists));
-                if (dists(i)<0)
-                   %i=i-1; 
+                if (dists(i)<0 && i>1)
+                    i=i-1;
+                end
+                H(i,j)=H(i,j)+1;
+                [row col]=find(L(:,1)==i & L(:,2)==j);
+                if (isempty(row)==1)
+                    if(H(i,j)>=L(1,3))
+                        L(1,:)=[i j H(i,j)];                                                
+                    end
+                else
+                   L(row,:)=[i j H(i,j)];
+                   L=sortrows(L,3);
                 end
                 
-                if (d<1)
-                    H(i,j)=H(i,j)+1;
-                    break;
-                end
+                %if (d<1)
+                    %break;
+                %end
             end
         end
     end
@@ -73,7 +95,7 @@ for j=1:T
 end
 %}
 
-L=1;
-res=1;
+
+res=rhos;
 end
 
