@@ -30,17 +30,17 @@ thetas = linspace(-theta_max, theta_max, T+1); % Slice the theta axis.
 rhos = linspace(-rho_max, rho_max, R+1); % Slice the rho axis.
 %rhos = -rho_max:1:rho_max;
 
-H = zeros(R, T);
+H = zeros(R, T, 2);
 L = zeros(n,3);
 
-for n1=1:N1
-    for n2=1:N2
+for n1=1:N1 % Corresponds to the rows = y in Hessian normal form
+    for n2=1:N2 % Corresponds to the columns = x in Hessian normal form
         if (img_binary(n1,n2)==1)
             
             for j=1:T
-                t = (thetas(j) + thetas(j+1))/2;
-                %t = thetas(j);
-                r = n1*cos(t) + n2*sin(t);
+                %t = (thetas(j) + thetas(j+1))/2;
+                t = thetas(j);
+                r = n2*cos(t) + n1*sin(t);
                 %{
                 for i=2:R+1
                     if (rhos(i)>=r)
@@ -49,27 +49,33 @@ for n1=1:N1
                     end
                 end
                 %}
-                
-                
+                            
                 dists = rhos-r;
                 [d,i]=min(abs(dists));
                 if (dists(i)<0 && i>1)
                     i=i-1;
                 end
-                H(i,j)=H(i,j)+1;
+                
+                H(i,j,1)=H(i,j,1)+1;
+                k = sum(H(i,j,:)>0);
+                H(i,j,k+1)= n1+N1*n2; % Add the unique id of the pixel to the array.
+                
+                % Check if (i, j) pair exists in L.
                 [row col]=find(L(:,1)==i & L(:,2)==j);
                 if (isempty(row)==1)
-                    if(H(i,j)>=L(1,3))
-                        L(1,:)=[i j H(i,j)];                                                
+                    % If not, check the number of points is greater than
+                    % the minimum of L matrix.
+                    if(H(i,j,1)>=L(1,3))
+                        L(1,:)=[i j H(i,j,1)]; % If so, then replace entire row in L.
                     end
                 else
-                   L(row,:)=[i j H(i,j)];
-                   L=sortrows(L,3);
+                    % If it exists, then update the values and sort the L
+                    % matrix, in acsending order, based on nuumber of
+                    % points.
+                    L(row,:)=[i j H(i,j,1)];
+                    L=sortrows(L,3);
                 end
                 
-                %if (d<1)
-                    %break;
-                %end
             end
         end
     end
@@ -95,7 +101,9 @@ for j=1:T
 end
 %}
 
+res=N1*N2-sum(unique(H(:,:,2:end))>0);
 
-res=rhos;
+L=L(:,1:2);
+H=H(:,:,1);
 end
 
