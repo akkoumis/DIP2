@@ -104,6 +104,9 @@ end
 res=N1*N2-sum(unique(H(:,:,2:end))>0);
 
 L=L(:,1:2);
+L(:,1)=rhos(L(:,1));
+L(:,2)=thetas(L(:,2));
+
 H=H(:,:,1);
 end
 
