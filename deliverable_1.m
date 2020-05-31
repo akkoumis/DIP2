@@ -36,21 +36,9 @@ hold off;
 subplot(2,1,2);
 lines = houghlines(im2_canny,T_canny,R_canny,P_canny,'FillGap',5,'MinLength',15);
 imshow(im2_rgb), hold on
-max_len = 0;
 for k = 1:length(lines)
    xy = [lines(k).point1; lines(k).point2];
    plot(xy(:,1),xy(:,2),'LineWidth',2,'Color','green');
-
-   % Plot beginnings and ends of lines
-   %plot(xy(1,1),xy(1,2),'x','LineWidth',2,'Color','yellow');
-   %plot(xy(2,1),xy(2,2),'x','LineWidth',2,'Color','red');
-
-   % Determine the endpoints of the longest line segment
-   len = norm(lines(k).point1 - lines(k).point2);
-   if ( len > max_len)
-      max_len = len;
-      xy_long = xy;
-   end
 end
 title('Canny');
 hold off;
@@ -73,21 +61,9 @@ hold off;
 subplot(2,1,2);
 lines = houghlines(im2_sobel,T_sobel,R_sobel,P_sobel,'FillGap',10,'MinLength',7);
 imshow(im2_rgb), hold on
-max_len = 0;
 for k = 1:length(lines)
    xy = [lines(k).point1; lines(k).point2];
    plot(xy(:,1),xy(:,2),'LineWidth',2,'Color','green');
-
-   % Plot beginnings and ends of lines
-   %plot(xy(1,1),xy(1,2),'x','LineWidth',2,'Color','yellow');
-   %plot(xy(2,1),xy(2,2),'x','LineWidth',2,'Color','red');
-
-   % Determine the endpoints of the longest line segment
-   len = norm(lines(k).point1 - lines(k).point2);
-   if ( len > max_len)
-      max_len = len;
-      xy_long = xy;
-   end
 end
 title('Sobel');
 hold off;
@@ -101,6 +77,7 @@ N2 = size(im2_canny, 2);
 rho_max = round(sqrt(N1.^2 + N2.^2));
 my_R_canny = -rho_max:1:rho_max;
 
+% Plot My Hough Transform.
 figure('Name','My Canny');
 subplot(2,1,1);
 imshow(imadjust(rescale(my_H_canny)),'XData',my_T_canny,'YData',my_R_canny,...
@@ -109,29 +86,22 @@ title('My Hough transform of Canny');
 xlabel('\theta'), ylabel('\rho');
 axis on, axis normal, hold on;
 colormap(gca,hot);
-my_P_canny  = houghpeaks(my_H_canny,10,'threshold',ceil(0.3*max(my_H_canny(:))));
-x = my_T_canny(my_P_canny(:,2)); y = my_R_canny(my_P_canny(:,1));
+x = my_L(:,2); y = my_L(:,1);
 plot(x,y,'s','color','blue');
 hold off;
 
+% Draw image with the lines, based on My Hough Transform.
 subplot(2,1,2);
-lines = houghlines(im2_canny,my_T_canny,my_R_canny,my_P_canny,'FillGap',5,'MinLength',15);
 imshow(im2), hold on
-max_len = 0;
-for k = 1:length(lines)
-   xy = [lines(k).point1; lines(k).point2];
-   plot(xy(:,1),xy(:,2),'LineWidth',2,'Color','green');
-
-   % Plot beginnings and ends of lines
-   %plot(xy(1,1),xy(1,2),'x','LineWidth',2,'Color','yellow');
-   %plot(xy(2,1),xy(2,2),'x','LineWidth',2,'Color','red');
-
-   % Determine the endpoints of the longest line segment
-   len = norm(lines(k).point1 - lines(k).point2);
-   if ( len > max_len)
-      max_len = len;
-      xy_long = xy;
-   end
+for k = 1:length(my_L)
+    xy = rhoTheta2LineEndpoints(my_L(k,1),my_L(k,2),N2,N1);
+    line([xy(1) xy(2)], [xy(3) xy(4)]);
 end
 title('My Canny');
 hold off;
+
+
+%% H print %%
+
+figure('Name','My H');
+imshow(my_H_canny,[ ]);
