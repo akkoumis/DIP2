@@ -80,12 +80,13 @@ my_R_canny = -rho_max:1:rho_max;
 % Plot My Hough Transform.
 figure('Name','My Canny');
 subplot(2,1,1);
-imshow(imadjust(rescale(my_H_canny)),'XData',my_T_canny,'YData',my_R_canny,...
-      'InitialMagnification','fit');
+%imshow(imadjust(rescale(my_H_canny)),'XData',my_T_canny,'YData',my_R_canny,...
+%      'InitialMagnification','fit');
+imshow(my_H_canny,[ ],'XData',my_T_canny,'YData',my_R_canny);
 title('My Hough transform of Canny');
 xlabel('\theta'), ylabel('\rho');
 axis on, axis normal, hold on;
-colormap(gca,hot);
+%colormap(gca,hot);
 x = my_L(:,2); y = my_L(:,1);
 plot(x,y,'s','color','blue');
 hold off;

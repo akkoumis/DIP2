@@ -1,5 +1,7 @@
 function xy = rhoTheta2LineEndpoints(rho,theta,max_X,max_Y)
-%RHOTHETA2LINEENDPOINTS Summary of this function goes here
+% RHOTHETA2LINEENDPOINTS - Return endpoints of a line, given rho and theta 
+% of Hesse Normal Form, inside the bounds of an image, with size max_X of
+% columns and max_Y of rows.
 %   Detailed explanation goes here
 
 lambda_rho = tan(theta);
