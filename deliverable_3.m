@@ -18,3 +18,8 @@ my_rot = myImgRotation(im2,54*pi/180);
 figure('Name','My Rotation');
 imshow(my_rot);
 
+%% Calculate Error %%
+error = rot - my_rot;
+error_percentage = sum(error(:))/sum(sum((error~=0)));
+
+
