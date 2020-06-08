@@ -10,7 +10,10 @@ function corners = myDetectHarrisFeatures(I)
 %   filter w and, thus, calculate the matrix M. Using the M, we can decide
 %   whether it's a corner or not.
 %
+%   --- Input ---
 %   I is the image whom corners we must detect.
+%   --- Output ---
+%   corners is an n x 2 matrix containing the coordinate of found corners.
 
 kappa = 0.04; % Kappa coefficient
 threshold = 0.1; % The T coefficient.

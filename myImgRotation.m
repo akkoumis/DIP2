@@ -8,8 +8,11 @@ function rotImg = myImgRotation(img , angle)
 %   original and calculate its value, in the rotated one, using bilinear
 %   interpolation. That scales to each channel of the image (Greyscale, RGB).
 %   
+%   --- Input ---
 %   img is the initial image.
 %   angle quantifies the counter-clockwise rotation (in radians).
+%   --- Input ---
+%   rotImg ie the rotated image.
 
 T = [cos(angle) sin(angle); -sin(angle) cos(angle)]; % Transform Matrix for Rotation.
 

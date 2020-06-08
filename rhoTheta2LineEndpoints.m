@@ -2,7 +2,14 @@ function xy = rhoTheta2LineEndpoints(rho,theta,max_X,max_Y)
 % RHOTHETA2LINEENDPOINTS - Return endpoints of a line, given rho and theta 
 % of Hesse Normal Form, inside the bounds of an image, with size max_X of
 % columns and max_Y of rows.
-%   Detailed explanation goes here
+%   We isolate special cases and apply math theory to calculate the
+%   coordinates.
+%
+%   --- Input ---
+%   rho is the distance parameter of Hesse Normal Form.
+%   theta is the angle parameter of Hesse Normal Form.
+%   --- Output ---
+%   xy is a column vector of the endpoint cartesian coordinates, as in [x_left x_right y_left y_right].
 
 lambda_rho = tan(theta);
 lambda_e = - 1/lambda_rho;
